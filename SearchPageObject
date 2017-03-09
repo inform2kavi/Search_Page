@@ -1,0 +1,64 @@
+package pages;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+public class SearchPageObject {
+	
+	//Search page Locators
+	String searchBlocksLocator="div[class$='-listing']";
+	String BusinessNameLocator="div[class$='-listing'] a[class$='-listing__title']";
+	String RecommendationsCountLocator="div[class$='-listing'] div[class$='-listing__recommendations'] a";
+	
+	By searchBlock = By.cssSelector(searchBlocksLocator);
+	By BusinessName = By.cssSelector(BusinessNameLocator);
+	By RecommendationsCount = By.cssSelector(RecommendationsCountLocator);
+	
+	
+	//Extracing the recommendation number by strpping off characters other than numbers
+	public int extractNumofRecommendations(String str)
+	{
+		String REGEX = "[^0-9]";
+		String Replace = "";
+		Pattern p = Pattern.compile(REGEX);
+		Matcher m = p.matcher(str.toString());
+		str = m.replaceAll(Replace);
+		return Integer.parseInt(str);
+				
+	}
+	
+	//Using hash map to form key value pair(recommendation number and business name)
+	public HashMap<Integer,String> FindMostRecommendations(WebDriver driver)
+	{
+		HashMap <Integer, String> map = new HashMap<Integer,String>();
+		List <WebElement> Rec = driver.findElements(RecommendationsCount);
+		List <WebElement> name = driver.findElements(BusinessName);
+		
+		for(int i=0; i<Rec.size(); i++)
+		{
+			map.put(extractNumofRecommendations(Rec.get(i).getText()), name.get(i).getText());
+		}
+		
+		return map;
+	}
+	
+	//using treemap to sort the hashmap and return the last key which is highest recommendation count
+	public String ShowMostRecommendedBuisnessName(WebDriver driver)
+	{
+		HashMap<Integer,String> hmap = FindMostRecommendations(driver);
+		TreeMap<Integer, String> tMap = new  TreeMap<Integer,String>(hmap);
+		int max = tMap.lastKey();
+	
+		String str = "The most recommended bussiness name is "+tMap.get(max)+" with recommendations count is "+max;
+		return str;
+	}
+	
+
+}
