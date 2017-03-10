@@ -3,7 +3,7 @@
 
 2)Package pages contains all the Page Object(Impletmenting page Object model)
 
-3)Package Utility contains all the library files(Methods which are used at many places are made as library files) --DRY(Do not Repeat Your code)
+3)Package Utility contains all the library files(Methods for reading from excel, property file, capturing screenshot etc) --DRY(Do not Repeat Your code)
 
 4)BaseClass contains @BeforeClass, @AfterClass, @BeforeMethod and @AfterMethod which is generically implemented. All the test class should extend the base class.
 
